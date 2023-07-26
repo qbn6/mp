@@ -4,13 +4,22 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.example.mpproject.entity.Resource">
-        <id column="resource_id" property="resourceId" />
-        <result column="parent_id" property="parentId" />
-        <result column="resource_name" property="resourceName" />
-        <result column="resource_type" property="resourceType" />
-        <result column="url" property="url" />
-        <result column="code" property="code" />
-        <result column="sort" property="sort" />
+        <id column="resource_id" property="resourceId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="resource_name" property="resourceName"/>
+        <result column="resource_type" property="resourceType"/>
+        <result column="url" property="url"/>
+        <result column="code" property="code"/>
+        <result column="sort" property="sort"/>
     </resultMap>
+    <!--    查询当前登陆人角色的资源-->
+    <select id="listResource" resultType="com.example.mpproject.vo.ResourcesVO">
+        select re.resource_id,
+               re.resource_name,
+               re.url
+        from resource re
+                 inner join role_resource rr on
+            re.resource_id = rr.resource_id ${ew.customSqlSegment}
+    </select>
 
 </mapper>

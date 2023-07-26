@@ -12,7 +12,7 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-  mapper-locations: classpath:mapper/project/*Mapper.xml
+  mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.example.mpproject.entity
 logging:
   level:

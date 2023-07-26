@@ -23,7 +23,7 @@
                         <label class="layui-form-label">用户名</label>
                         <div class="layui-input-block">
                             <input type="text" name="username" required lay-verify="required"
-                                   placeholder="请输入用户名" autocomplete="off" class="layui-input" maxlength="20">
+                                   placeholder="请输入用户名" autocomplete="off" class="layui-input" maxlength="20" value="mp">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -31,8 +31,11 @@
                         <div class="layui-input-block">
                             <input type="password" name="password" required
                                    lay-verify="required" placeholder="请输入密码" autocomplete="off"
-                                   class="layui-input" maxlength="20">
+                                   class="layui-input" maxlength="20" value="123456">
                         </div>
+                    </div>
+                    <div class="layui-form-item" th:if="${not #strings.isEmpty(error)}">
+                        <font color="red" th:text="${error}"></font>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-input-block">
