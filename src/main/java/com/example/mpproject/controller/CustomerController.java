@@ -43,7 +43,7 @@ public class CustomerController {
     }
 
     /**
-     * 客户新增页面展示
+     * 客户页面展示
      *
      * @param realName
      * @param phone
@@ -121,4 +121,19 @@ public class CustomerController {
     public R<Object> delete(@PathVariable  Long id) {
         return ResultUtil.resultInsertR(customerService.removeById(id));
     }
+
+
+
+    /**
+     * 进入详情页
+     *
+     * @return
+     */
+    @GetMapping("/toDetail/{id}")
+    public String toDetail(@PathVariable Long id, Model model) {
+        Customer customer = customerService.getById(id);
+        model.addAttribute("customer",customer);
+        return "customer/customerDetail";
+    }
+
 }

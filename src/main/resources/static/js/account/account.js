@@ -1,8 +1,12 @@
+layui.laydate.render({
+    elem:'#createTimeRange',
+    range:true
+})
 var table = layui.table;
 //第一个实例
 var tableIns = table.render({
-    elem: '#customerList',
-    url: '/customer/list',
+    elem: '#accountList',
+    url: '/account/list',
     page: true,
     parseData: function (res) {
         return {
@@ -13,11 +17,11 @@ var tableIns = table.render({
         };
     },
     cols: [[
+        {field: 'username', title: '用户名'},
         {field: 'realName', title: '真实姓名'},
+        {field: 'roleName', title: '角色名称'},
         {field: 'sex', title: '性别'},
-        {field: 'age', title: '年龄'},
-        {field: 'address', title: '地址'},
-        {field: 'phone', title: '手机号码'},
+        {field: 'email', title: '邮箱'},
         {field: 'createTime', title: '创建时间'},
         {field: '操作', toolbar: '#barDemo'},
 
@@ -32,7 +36,8 @@ function query() {
     tableIns.reload({
         where: {
             realName: $("#realName").val(),
-            phone: $("#phone").val()
+            email: $("#email").val(),
+            createTimeRange:$("#createTimeRange").val()
         },
         page: {
             curr: 1
@@ -42,7 +47,7 @@ function query() {
 
 
 function toAdd() {
-    openLayer('/customer/toAdd','新增客户');
+    openLayer('/account/toAdd','新增账号');
     layui.form.render();
     mySubmit('addSubmit','POST');
 }
