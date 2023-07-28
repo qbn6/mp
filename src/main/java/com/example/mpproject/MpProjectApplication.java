@@ -10,6 +10,7 @@ public class MpProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MpProjectApplication.class, args);
+
     }
 
 }
