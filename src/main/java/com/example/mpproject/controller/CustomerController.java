@@ -51,6 +51,7 @@ public class CustomerController {
                 .like(StringUtils.isNotBlank(phone),Customer::getPhone,phone)
                 .orderByDesc(Customer::getCustomerId);
         Page<Customer> customerPage = customerService.page(new Page<>(page, limit), queryWrapper);
+        System.out.println(123);
         return ResultUtil.resultPageR(customerPage);
 
     }
