@@ -1,12 +1,12 @@
 package com.example.mpproject.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.mpproject.dto.LoginDTO;
 import com.example.mpproject.service.AccountService;
 import com.example.mpproject.service.ResourceService;
 import com.example.mpproject.vo.ResourcesVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +45,7 @@ public class LoginController {
     , Model model) {
         LoginDTO loginDTO = accountService.login(username, password);
         String error = loginDTO.getError();
-        if (StringUtils.isEmpty(error)) {
+        if (ObjectUtils.isEmpty(error)) {
             session.setAttribute("account", loginDTO.getAccount());
             List<ResourcesVO> resourcesVOS = resourceService.listResourceByRoleId(loginDTO.getAccount().getRoleId());
             model.addAttribute("resources",resourcesVOS);

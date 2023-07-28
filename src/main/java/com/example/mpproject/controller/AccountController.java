@@ -1,5 +1,6 @@
 package com.example.mpproject.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author tmac
  * @since 2023-07-26
  */
-@RestController
+@Controller
 @RequestMapping("/account")
 public class AccountController {
 
