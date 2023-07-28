@@ -41,6 +41,6 @@ public class BaseEntity {
     /**
      * 修改人
      */
-    @TableField(value = "modified_account_id", fill = FieldFill.INSERT)
+    @TableField(value = "modified_account_id", fill = FieldFill.UPDATE)
     private Long modifiedAccountId;
 }

@@ -24,14 +24,14 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @TableName("customer")
-public class Customer implements Serializable {
+public class Customer extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-    @TableId(value = "customer_id", type = IdType.AUTO)
+    @TableId(value = "customer_id")
     private Long customerId;
 
     /**

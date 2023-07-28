@@ -19,4 +19,16 @@ public class ResultUtil {
         data.put("records",page.getRecords());
         return R.ok(data);
     }
+
+    /**
+     * 构造新增通用插入结果集
+     * @param success
+     * @return
+     */
+    public static  R<Object> resultInsertR(boolean success){
+        if (success) {
+            return R.ok(null);
+        }
+        return R.failed("新增失败");
+    }
 }

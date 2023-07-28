@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @TableName("role")
-public class Role implements Serializable {
+public class Role extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,30 +45,6 @@ public class Role implements Serializable {
      */
     @TableField("remark")
     private String remark;
-
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    /**
-     * 修改时间
-     */
-    @TableField(value = "modified_time", fill = FieldFill.UPDATE)
-    private LocalDateTime modifiedTime;
-
-    /**
-     * 创建人
-     */
-    @TableField(value = "create_account_id", fill = FieldFill.INSERT)
-    private Long createAccountId;
-
-    /**
-     * 修改人
-     */
-    @TableField(value = "modified_account_id", fill = FieldFill.INSERT)
-    private Long modifiedAccountId;
 
     /**
      * 逻辑删除标识(0、否 1、是)

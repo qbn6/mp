@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @TableName("role_resource")
-public class RoleResource implements Serializable {
+public class RoleResource  implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

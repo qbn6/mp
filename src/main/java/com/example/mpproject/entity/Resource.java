@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @TableName("resource")
-public class Resource implements Serializable {
+public class Resource extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
