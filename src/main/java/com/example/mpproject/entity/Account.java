@@ -41,6 +41,12 @@ public class Account extends BaseEntity implements Serializable {
     private Long roleId;
 
     /**
+     * 角色名称
+     */
+    @TableField(exist = false)
+    private String roleName;
+
+    /**
      * 用户名
      */
     @TableField("username")

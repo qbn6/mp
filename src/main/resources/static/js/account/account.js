@@ -45,7 +45,9 @@ function query() {
     });
 }
 
-
+/**
+ * 添加账号
+ */
 function toAdd() {
     openLayer('/account/toAdd','新增账号');
     layui.form.render();
@@ -53,28 +55,31 @@ function toAdd() {
 }
 
 //监听工具条
+
+//监听工具条
 table.on('tool(test)',function (obj){
     var data=obj.data;
     var layEvent=obj.event;
     var tr=obj.tr;
 
-    let customerId = data.customerId;
+    let accountId = data.accountId;
 
 
     if (layEvent=='detail'){
-        openLayer('/customer/toDetail/'+customerId,'查看客户');
+        openLayer('/account/toDetail/'+accountId,'查看客户');
     }else if (layEvent=='del'){
         layer.confirm('真的删除吗？',function (index){
             // obj.del();
 
-            myDelete('/customer/delete/'+customerId);
+            myDelete('/account/delete/'+accountId);
             layer.close(index);
         });
     }else if (layEvent=='edit'){
-        openLayer('/customer/toUpdate/'+customerId,'更新客户');
+        openLayer('/account/toUpdate/'+accountId,'更新客户');
         layui.form.render();
         mySubmit('updateSubmit','PUT');
 
     }
 })
+
 

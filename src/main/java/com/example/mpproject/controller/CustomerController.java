@@ -2,6 +2,7 @@ package com.example.mpproject.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -16,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,7 +34,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
-
     /**
      * 进入列表页
      *
@@ -55,9 +57,8 @@ public class CustomerController {
     @ResponseBody
     public R<Map<String, Object>> list(String realName, String phone, Long page, Long limit) {
         LambdaQueryWrapper<Customer> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.like(StringUtils.isNotBlank(realName), Customer::getRealName, realName)
-                .like(StringUtils.isNotBlank(phone), Customer::getPhone, phone)
-                .orderByDesc(Customer::getCustomerId);
+        queryWrapper.like(StringUtils.isNotBlank(realName), Customer::getRealName, realName).like(StringUtils.isNotBlank(phone), Customer::getPhone, phone).orderByDesc(Customer::getCustomerId);
+
         Page<Customer> customerPage = customerService.page(new Page<>(page, limit), queryWrapper);
         return ResultUtil.resultPageR(customerPage);
     }
@@ -74,6 +75,7 @@ public class CustomerController {
 
     /**
      * 添加客户
+     *
      * @param customer
      * @return
      */
@@ -83,9 +85,6 @@ public class CustomerController {
         return ResultUtil.resultInsertR(customerService.save(customer));
     }
 
-
-
-
     /**
      * 进入客户修改页面
      *
@@ -93,13 +92,15 @@ public class CustomerController {
      */
     @GetMapping("/toUpdate/{id}")
     public String toUpdate(@PathVariable Long id, Model model) {
+        System.out.println(""+id+"=====================");
         Customer customer = customerService.getById(id);
-        model.addAttribute("customer",customer);
+        model.addAttribute("customer", customer);
         return "customer/customerUpdate";
     }
 
     /**
      * 修改客户
+     *
      * @param customer
      * @return
      */
@@ -109,19 +110,17 @@ public class CustomerController {
         return ResultUtil.resultInsertR(customerService.updateById(customer));
     }
 
-
-
     /**
      * 删除客户
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public R<Object> delete(@PathVariable  Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         return ResultUtil.resultInsertR(customerService.removeById(id));
     }
-
 
 
     /**
@@ -132,7 +131,7 @@ public class CustomerController {
     @GetMapping("/toDetail/{id}")
     public String toDetail(@PathVariable Long id, Model model) {
         Customer customer = customerService.getById(id);
-        model.addAttribute("customer",customer);
+        model.addAttribute("customer", customer);
         return "customer/customerDetail";
     }
 

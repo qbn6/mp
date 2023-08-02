@@ -1,6 +1,9 @@
 package com.example.mpproject.controller;
 
+import cn.hutool.core.lang.UUID;
+import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -8,8 +11,11 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.mpproject.entity.Account;
 import com.example.mpproject.entity.Customer;
+import com.example.mpproject.entity.Role;
+import com.example.mpproject.query.AccountQuery;
 import com.example.mpproject.service.AccountService;
 import com.example.mpproject.service.CustomerService;
+import com.example.mpproject.service.RoleService;
 import com.example.mpproject.utils.ResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +40,7 @@ import java.util.Map;
 public class AccountController {
     private final AccountService accountService;
     private final CustomerService customerService;
+    private final RoleService roleService;
 
     /**
      * 进入账号列表页
@@ -45,24 +53,15 @@ public class AccountController {
     }
 
     /**
-     * 账号页面展示
-     * @param realName
-     * @param email
-     * @param localDateTime
-     * @param page
-     * @param limit
+     *
+     * @param accountQuery
      * @return
      */
     @GetMapping("/list")
     @ResponseBody
-    public R<Map<String, Object>> list(String realName, String email, LocalDateTime localDateTime, Long page, Long limit) {
-        LambdaQueryWrapper<Account> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.like(StringUtils.isNotBlank(realName), Account::getRealName, realName)
-                .like(StringUtils.isNotBlank(email), Account::getEmail, email)
-                .like(ObjectUtils.isNotEmpty(localDateTime),Account::getCreateTime,localDateTime)
-                .orderByDesc(Account::getAccountId);
-        Page<Account> accountPage = accountService.page(new Page<>(page, limit), queryWrapper);
-        return ResultUtil.resultPageR(accountPage);
+    public R<Map<String, Object>> list(AccountQuery accountQuery) {
+        IPage<Account> accountIPage = accountService.accountPage(accountQuery);
+        return ResultUtil.resultPageR(accountIPage);
     }
 
     /**
@@ -71,7 +70,9 @@ public class AccountController {
      * @return
      */
     @GetMapping("/toAdd")
-    public String toAdd() {
+    public String toAdd(Model model) {
+        List<Role> roles = roleService.list(Wrappers.<Role>lambdaQuery().orderByAsc(Role::getRoleId));
+        model.addAttribute("roles",roles);
         return "account/accountAdd";
     }
 
@@ -83,33 +84,57 @@ public class AccountController {
     @PostMapping("/add")
     @ResponseBody
     public R<Object> add(@RequestBody Account account) {
+        setPasswordAndSalt(account);
         return ResultUtil.resultInsertR(accountService.save(account));
     }
 
-
+    /**
+     * 设置加密密码 和 加密盐
+     * @param account
+     */
+    private static void setPasswordAndSalt(Account account) {
+        String password = account.getPassword();
+        String salt = UUID.fastUUID().toString().replaceAll("-", "");
+        MD5 md5 = new MD5(salt.getBytes());
+        String digestHex = md5.digestHex(password);
+        account.setPassword(digestHex);
+        account.setSalt(salt);
+    }
 
 
     /**
-     * 进入客户修改页面
-     *
+     *  进入账号修改页面
+     * @param id
+     * @param model
      * @return
      */
     @GetMapping("/toUpdate/{id}")
     public String toUpdate(@PathVariable Long id, Model model) {
-        Customer customer = customerService.getById(id);
-        model.addAttribute("customer",customer);
-        return "customer/customerUpdate";
+        System.out.println(id );
+        Account account = accountService.getById(id);
+        model.addAttribute("account",account);
+
+        List<Role> roles = roleService.list(Wrappers.<Role>lambdaQuery().orderByAsc(Role::getRoleId));
+        model.addAttribute("roles",roles);
+
+        return "account/accountUpdate";
     }
 
     /**
      * 修改客户
-     * @param customer
+     * @param
      * @return
      */
     @PutMapping("/update")
     @ResponseBody
-    public R<Object> update(@RequestBody Customer customer) {
-        return ResultUtil.resultInsertR(customerService.updateById(customer));
+    public R<Object> update(@RequestBody Account account) {
+        if (StringUtils.isNotBlank(account.getPassword())){
+            setPasswordAndSalt(account);
+        }else{
+            account.setPassword(null);
+        }
+        setPasswordAndSalt(account);
+        return ResultUtil.resultInsertR(accountService.updateById(account));
     }
 
 
@@ -122,7 +147,7 @@ public class AccountController {
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public R<Object> delete(@PathVariable  Long id) {
-        return ResultUtil.resultInsertR(customerService.removeById(id));
+        return ResultUtil.resultInsertR(accountService.removeById(id));
     }
 
 
@@ -134,8 +159,8 @@ public class AccountController {
      */
     @GetMapping("/toDetail/{id}")
     public String toDetail(@PathVariable Long id, Model model) {
-        Customer customer = customerService.getById(id);
-        model.addAttribute("customer",customer);
+        Account account = accountService.getById(id);
+        model.addAttribute("account",account);
         return "customer/customerDetail";
     }
 }

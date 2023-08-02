@@ -18,5 +18,11 @@
         <result column="modified_account_id" property="modifiedAccountId" />
         <result column="deleted" property="deleted" />
     </resultMap>
+<!--   联表查询当前用户所属的角色 分页查询账号-->
+    <select id="accountPage" resultType="com.example.mpproject.entity.Account">
+        select a.*,r.role_name from account a  inner  join role r on a.role_id = r.role_id
+        ${ew.customSqlSegment}
+    </select>
+
 
 </mapper>
